@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Comprar Bilhete - Nalu</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    button {
+      background: #0c9;
+      border: none;
+      padding: 1rem 2rem;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Comprar Bilhete</h1>
+    <p>Reserva o teu lugar no Sunset do Nalu Beach Club</p>
+    <button onclick="pagar()">Pagar 15€</button>
+  </div>
+
+  <script>
+    async function pagar() {
+      const res = await fetch("https://us-central1-nalu-pagamentos.cloudfunctions.net/pagar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          descricao: "Bilhete Sunset",
+          valor: 1500
+        })
+      });
+
+      const data = await res.json();
+      if (data.redirect_url) {
+        window.location.href = data.redirect_url;
+      } else {
+        alert("Erro ao processar pagamento");
+        console.error(data);
+      }
+    }
+  </script>
+</body>
+</html>
